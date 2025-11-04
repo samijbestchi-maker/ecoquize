@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>생태환경 퀴즈</title>
+<style>
+  body {
+    font-family: "Noto Sans KR", sans-serif;
+    background: #f0f7f5;
+    color: #222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .quiz-box {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 480px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  h1 {
+    text-align: center;
+    color: #2a7a5a;
+  }
+  .question {
+    font-weight: 600;
+    margin: 20px 0 10px;
+  }
+  .options button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 6px 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #f8f8f8;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .options button:hover { background: #e0f0e5; }
+  #next-btn {
+    background: #2a7a5a;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 15px;
+    font-weight: bold;
+  }
+  #next-btn:hover { background: #24684c; }
+  .result {
+    text-align: center;
+    font-weight: bold;
+    color: #2a7a5a;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+  <div class="quiz-box">
+    <h1>🌿 생태환경 퀴즈</h1>
+    <div id="quiz">
+      <div id="question" class="question"></div>
+      <div id="options" class="options"></div>
+      <button id="next-btn">다음</button>
+      <div id="result" class="result"></div>
+    </div>
+  </div>
+
+<script>
+const quizData = [
+  { q: "1. 온실가스가 증가하면 일어나는 현상은?", a: ["지구 온난화", "대기 정화", "오존층 회복", "지진 증가"], correct: 0 },
+  { q: "2. 나무를 심는 가장 큰 이유는?", a: ["장식", "산소 공급과 탄소 흡수", "그늘 제공", "공간 차지"], correct: 1 },
+  { q: "3. 플라스틱 폐기물의 주요 문제는?", a: ["빠른 분해", "수질 오염", "식량 증가", "공기 정화"], correct: 1 },
+  { q: "4. 해양 오염의 주요 원인은?", a: ["산불", "생활 쓰레기", "폭우", "대기 오염"], correct: 1 },
+  { q: "5. 재활용의 가장 큰 목적은?", a: ["자원 절약과 환경 보호", "시간 절약", "디자인 향상", "공간 차지"], correct: 0 },
+  { q: "6. 대기 오염의 주된 원인은?", a: ["산소", "자동차 배기가스", "물", "토양"], correct: 1 },
+  { q: "7. 지구의 평균 온도가 올라가면 생기는 문제는?", a: ["빙하 감소", "가뭄", "해수면 상승", "모두 해당"], correct: 3 },
+  { q: "8. 외래종이 생태계에 미치는 영향은?", a: ["균형 유지", "생태계 교란", "토양 개선", "기온 상승"], correct: 1 },
+  { q: "9. 지속 가능한 발전의 핵심은?", a: ["환경, 경제, 사회의 조화", "산업 우선", "경제만 발전", "환경만 보호"], correct: 0 },
+  { q: "10. 전기를 아껴 쓰면 좋은 이유는?", a: ["요금 절약과 온실가스 감소", "조명 밝기 증가", "공기 정화", "무의미"], correct: 0 }
+];
+
+let current = 0;
+let score = 0;
+
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const nextBtn = document.getElementById("next-btn");
+const resultEl = document.getElementById("result");
+
+function loadQuestion() {
+  const data = quizData[current];
+  questionEl.textContent = data.q;
+  optionsEl.innerHTML = "";
+  data.a.forEach((opt, i) => {
+    const btn = document.createElement("button");
+    btn.textContent = opt;
+    btn.onclick = () => selectAnswer(i);
+    optionsEl.appendChild(btn);
+  });
+  resultEl.textContent = "";
+}
+
+function selectAnswer(i) {
+  const correct = quizData[current].correct;
+  const buttons = document.querySelectorAll(".options button");
+  buttons.forEach((b, idx) => {
+    b.disabled = true;
+    if (idx === correct) b.style.background = "#b7f5c4";
+    else if (idx === i) b.style.background = "#f5b7b7";
+  });
+  if (i === correct) score++;
+}
+
+nextBtn.onclick = () => {
+  current++;
+  if (current < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+};
+
+function showResult() {
+  questionEl.textContent = "퀴즈 완료!";
+  optionsEl.innerHTML = "";
+  nextBtn.style.display = "none";
+  resultEl.innerHTML = `당신의 점수: ${score} / ${quizData.length}`;
+}
+
+loadQuestion();
+</script>
+</body>
+</html>
